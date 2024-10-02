@@ -1,434 +1,821 @@
+# Import required libraries
 from time import sleep
 import random
 from colorama import Fore, Back, Style
 
-o= Style.BRIGHT+Fore.LIGHTRED_EX + 'o'+ Style.RESET_ALL
-r= Fore.RED + 'r'+ Style.RESET_ALL
-g= Fore.GREEN + 'g'+ Style.RESET_ALL
-y= Fore.YELLOW + 'y'+ Style.RESET_ALL
-b= Fore.BLUE + 'b'+ Style.RESET_ALL
-w= 'w'
+# Define color representations for the cube faces
+orange = Style.BRIGHT + Fore.LIGHTRED_EX + 'o' + Style.RESET_ALL
+red = Fore.RED + 'r' + Style.RESET_ALL
+green = Fore.GREEN + 'g' + Style.RESET_ALL
+yellow = Fore.YELLOW + 'y' + Style.RESET_ALL
+blue = Fore.BLUE + 'b' + Style.RESET_ALL
+white = 'w'
+
+# Define spacing for cube visualization
+space = '       '
+
+# Define face colors
+green, orange, white, red, yellow, blue = 'g', 'o', 'w', 'r', 'y', 'b'
+print(green, orange, white, red, yellow, blue)
+
+# Initialize cube faces
+GREEN, ORANGE, WHITE, RED, YELLOW, BLUE = [], [], [], [], [], []
+for _ in range(9):
+    GREEN.append(green)
+    ORANGE.append(orange)
+    WHITE.append(white)
+    RED.append(red)
+    YELLOW.append(yellow)
+    BLUE.append(blue)
+
+# Define cube rotation functions
+
+def rotate_white_clockwise():
+    # Rotate the white face clockwise
+    temp = WHITE[1]
+    WHITE[1], WHITE[3], WHITE[7], WHITE[5] = WHITE[3], WHITE[7], WHITE[5], temp
+
+    temp = WHITE[0]
+    WHITE[0], WHITE[6], WHITE[8], WHITE[2] = WHITE[6], WHITE[8], WHITE[2], temp
+
+    # Update adjacent face edges
+    temp = GREEN[8]
+    GREEN[8], RED[2], BLUE[0], ORANGE[6] = RED[2], BLUE[0], ORANGE[6], temp
+
+    temp = GREEN[7]
+    GREEN[7], RED[5], BLUE[1], ORANGE[3] = RED[5], BLUE[1], ORANGE[3], temp
+
+    temp = GREEN[6]
+    GREEN[6], RED[8], BLUE[2], ORANGE[0] = RED[8], BLUE[2], ORANGE[0], temp
+
+def rotate_white_counterclockwise():
+    # Rotate the white face counterclockwise
+    temp = WHITE[5]
+    WHITE[3], WHITE[7], WHITE[5], WHITE[1] = WHITE[1], WHITE[3], WHITE[7], temp
+
+    temp = WHITE[2]
+    WHITE[6], WHITE[8], WHITE[2], WHITE[0] = WHITE[0], WHITE[6], WHITE[8], temp
+
+    # Update adjacent face edges
+    temp = ORANGE[6]
+    RED[2], BLUE[0], ORANGE[6], GREEN[8] = GREEN[8], RED[2], BLUE[0], temp
+
+    temp = ORANGE[3]
+    RED[5], BLUE[1], ORANGE[3], GREEN[7] = GREEN[7], RED[5], BLUE[1], temp
+
+    temp = ORANGE[0]
+    RED[8], BLUE[2], ORANGE[0], GREEN[6] = GREEN[6], RED[8], BLUE[2], temp
+
+def rotate_yellow_clockwise():
+    # Rotate the yellow face clockwise
+    temp = YELLOW[1]
+    YELLOW[1], YELLOW[3], YELLOW[7], YELLOW[5] = YELLOW[3], YELLOW[7], YELLOW[5], temp
+
+    temp = YELLOW[0]
+    YELLOW[0], YELLOW[6], YELLOW[8], YELLOW[2] = YELLOW[6], YELLOW[8], YELLOW[2], temp
+
+    # Update adjacent face edges
+    temp = GREEN[2]
+    GREEN[2], ORANGE[8], BLUE[6], RED[0] = ORANGE[8], BLUE[6], RED[0], temp
+
+    temp = GREEN[1]
+    GREEN[1], ORANGE[5], BLUE[7], RED[3] = ORANGE[5], BLUE[7], RED[3], temp
+
+    temp = GREEN[0]
+    GREEN[0], ORANGE[2], BLUE[8], RED[6] = ORANGE[2], BLUE[8], RED[6], temp
+
+def rotate_yellow_counterclockwise():
+    # Rotate the yellow face counterclockwise
+    temp = YELLOW[5]
+    YELLOW[3], YELLOW[7], YELLOW[5], YELLOW[1] = YELLOW[1], YELLOW[3], YELLOW[7], temp
+
+    temp = YELLOW[2]
+    YELLOW[6], YELLOW[8], YELLOW[2], YELLOW[0] = YELLOW[0], YELLOW[6], YELLOW[8], temp
+
+    # Update adjacent face edges
+    temp = RED[0]
+    ORANGE[8], BLUE[6], RED[0], GREEN[2] = GREEN[2], ORANGE[8], BLUE[6], temp
+
+    temp = RED[3]
+    ORANGE[5], BLUE[7], RED[3], GREEN[1] = GREEN[1], ORANGE[5], BLUE[7], temp
+
+    temp = RED[6]
+    ORANGE[2], BLUE[8], RED[6], GREEN[0] = GREEN[0], ORANGE[2], BLUE[8], temp
+
+def rotate_orange_clockwise():
+    # Rotate the orange face clockwise
+    temp = ORANGE[1]
+    ORANGE[1], ORANGE[3], ORANGE[7], ORANGE[5] = ORANGE[3], ORANGE[7], ORANGE[5], temp
+
+    temp = ORANGE[0]
+    ORANGE[0], ORANGE[6], ORANGE[8], ORANGE[2] = ORANGE[6], ORANGE[8], ORANGE[2], temp
+
+    # Update adjacent face edges
+    temp = WHITE[2]
+    YELLOW[6], BLUE[2], WHITE[2], GREEN[2] = GREEN[2], YELLOW[6], BLUE[2], temp
+
+    temp = WHITE[8]
+    YELLOW[0], BLUE[8], WHITE[8], GREEN[8] = GREEN[8], YELLOW[0], BLUE[8], temp
+
+    temp = WHITE[5]
+    YELLOW[3], BLUE[5], WHITE[5], GREEN[5] = GREEN[5], YELLOW[3], BLUE[5], temp
+
+def rotate_orange_counterclockwise():
+    # Rotate the orange face counterclockwise
+    temp = ORANGE[5]
+    ORANGE[3], ORANGE[7], ORANGE[5], ORANGE[1] = ORANGE[1], ORANGE[3], ORANGE[7], temp
+
+    temp = ORANGE[2]
+    ORANGE[6], ORANGE[8], ORANGE[2], ORANGE[0] = ORANGE[0], ORANGE[6], ORANGE[8], temp
+
+    # Update adjacent face edges
+    temp = GREEN[2]
+    GREEN[2], YELLOW[6], BLUE[2], WHITE[2] = YELLOW[6], BLUE[2], WHITE[2], temp
+
+    temp = GREEN[8]
+    GREEN[8], YELLOW[0], BLUE[8], WHITE[8] = YELLOW[0], BLUE[8], WHITE[8], temp
+
+    temp = GREEN[5]
+    GREEN[5], YELLOW[3], BLUE[5], WHITE[5] = YELLOW[3], BLUE[5], WHITE[5], temp
+
+def rotate_red_clockwise():
+    # Rotate the red face clockwise
+    temp = RED[1]
+    RED[1], RED[3], RED[7], RED[5] = RED[3], RED[7], RED[5], temp
+
+    temp = RED[0]
+    RED[0], RED[6], RED[8], RED[2] = RED[6], RED[8], RED[2], temp
+
+    # Update adjacent face edges
+    temp = GREEN[0]
+    GREEN[0], YELLOW[8], BLUE[0], WHITE[0] = YELLOW[8], BLUE[0], WHITE[0], temp
+
+    temp = GREEN[3]
+    GREEN[3], YELLOW[5], BLUE[3], WHITE[3] = YELLOW[5], BLUE[3], WHITE[3], temp
+
+    temp = GREEN[6]
+    GREEN[6], YELLOW[2], BLUE[6], WHITE[6] = YELLOW[2], BLUE[6], WHITE[6], temp
+
+def rotate_red_counterclockwise():
+    # Rotate the red face counterclockwise
+    temp = RED[5]
+    RED[3], RED[7], RED[5], RED[1] = RED[1], RED[3], RED[7], temp
+
+    temp = RED[2]
+    RED[6], RED[8], RED[2], RED[0] = RED[0], RED[6], RED[8], temp
+
+    # Update adjacent face edges
+    temp = WHITE[0]
+    YELLOW[8], BLUE[0], WHITE[0], GREEN[0] = GREEN[0], YELLOW[8], BLUE[0], temp
+
+    temp = WHITE[3]
+    YELLOW[5], BLUE[3], WHITE[3], GREEN[3] = GREEN[3], YELLOW[5], BLUE[3], temp
+
+    temp = WHITE[6]
+    YELLOW[2], BLUE[6], WHITE[6], GREEN[6] = GREEN[6], YELLOW[2], BLUE[6], temp
 
 
-space='       '
+def rotate_green_clockwise():
+    # Rotate the green face clockwise
+    temp = GREEN[1]
+    GREEN[1], GREEN[3], GREEN[7], GREEN[5] = GREEN[3], GREEN[7], GREEN[5], temp
 
-g,o,w,r,y,b='g','o','w','r','y','b'
-print(g,o,w,r,y,b)
-G,O,W,R,Y,B=[],[],[],[],[],[]
-for i in range(9):
-    G.append(g)
-    O.append(o)
-    W.append(w)
-    R.append(r)
-    Y.append(y)
-    B.append(b)
+    temp = GREEN[0]
+    GREEN[0], GREEN[6], GREEN[8], GREEN[2] = GREEN[6], GREEN[8], GREEN[2], temp
 
+    # Update adjacent face edges
+    temp = RED[0]
+    RED[0], WHITE[0], ORANGE[0], YELLOW[0] = WHITE[0], ORANGE[0], YELLOW[0], temp
 
-def WCW():
-    # W_clockwise
-    temp= W[1]
-    W[1],W[3],W[7]=W[3],W[7],W[5]
-    W[5]=temp
+    temp = RED[1]
+    RED[1], WHITE[1], ORANGE[1], YELLOW[1] = WHITE[1], ORANGE[1], YELLOW[1], temp
 
-    temp = W[0]
-    W[0], W[6], W[8] = W[6], W[8], W[2]
-    W[2]=temp
-
-    temp = G[8]
-    G[8],R[2],B[0] = R[2],B[0],O[6]
-    O[6] = temp
-
-    temp = G[7]
-    G[7],R[5],B[1] = R[5],B[1],O[3]
-    O[3] = temp
-
-    temp = G[6]
-    G[6],R[8],B[2] = R[8],B[2],O[0]
-    O[0] = temp
-def WCCW():
-    # W_counterclockwise
+    temp = RED[2]
+    RED[2], WHITE[2], ORANGE[2], YELLOW[2] = WHITE[2], ORANGE[2], YELLOW[2], temp
 
 
-    temp = W[5]
-    W[3], W[7], W[5]= W[1], W[3], W[7]
-    W[1] = temp
+def rotate_green_counterclockwise():
+    # Rotate the green face counterclockwise
+    temp = GREEN[5]
+    GREEN[3], GREEN[7], GREEN[5], GREEN[1] = GREEN[1], GREEN[3], GREEN[7], temp
 
-    temp = W[2]
-    W[6], W[8], W[2] = W[0], W[6], W[8]
-    W[0]=temp
+    temp = GREEN[2]
+    GREEN[6], GREEN[8], GREEN[2], GREEN[0] = GREEN[0], GREEN[6], GREEN[8], temp
 
-    temp = O[6]
-    R[2],B[0],O[6]= G[8],R[2],B[0]
-    G[8] = temp
+    # Update adjacent face edges
+    temp = YELLOW[0]
+    WHITE[0], ORANGE[0], YELLOW[0], RED[0] = RED[0], WHITE[0], ORANGE[0], temp
 
-    temp = O[3]
-    R[5],B[1],O[3] = G[7],R[5],B[1]
-    G[7] = temp
+    temp = YELLOW[1]
+    WHITE[1], ORANGE[1], YELLOW[1], RED[1] = RED[1], WHITE[1], ORANGE[1], temp
 
-    temp = O[0]
-    R[8],B[2],O[0] = G[6],R[8],B[2]
-    G[6] = temp
-def YCW():
-    # Y_clockwise
-    temp= Y[1]
-    Y[1],Y[3],Y[7]=Y[3],Y[7],Y[5]
-    Y[5]=temp
-
-    temp = Y[0]
-    Y[0], Y[6], Y[8] = Y[6], Y[8], Y[2]
-    Y[2]=temp
-
-    temp = G[2]
-    G[2],O[8],B[6] = O[8],B[6],R[0]
-    R[0] = temp
-
-    temp = G[1]
-    G[1], O[5], B[7] = O[5], B[7], R[3]
-    R[3] = temp
-
-    temp = G[0]
-    G[0], O[2], B[8] = O[2], B[8], R[6]
-    R[6] = temp
-def YCCW():
-    # Y_counterclockwise
-
-    temp = Y[5]
-    Y[3], Y[7], Y[5] = Y[1], Y[3], Y[7]
-    Y[1] = temp
-
-    temp = Y[2]
-    Y[6], Y[8], Y[2]= Y[0], Y[6], Y[8]
-    Y[0] = temp
-
-    temp = R[0]
-    O[8], B[6], R[0]= G[2], O[8], B[6]
-    G[2] = temp
-
-    temp = R[3]
-    O[5], B[7], R[3]= G[1], O[5], B[7]
-    G[1] = temp
-
-    temp = R[6]
-    O[2], B[8], R[6]=G[0], O[2], B[8]
-    G[0] = temp
-def OCW():
-    # W_clockwise
-    temp = O[1]
-    O[1], O[3], O[7] = O[3], O[7], O[5]
-    O[5] = temp
-
-    temp = O[0]
-    O[0], O[6], O[8] = O[6], O[8], O[2]
-    O[2] = temp
-
-    temp = W[2]
-    Y[6], B[2], W[2] =G[2], Y[6], B[2]
-    G[2] = temp
-
-    temp = W[8]
-    Y[0], B[8], W[8]= G[8], Y[0], B[8]
-    G[8] = temp
-
-    temp = W[5]
-    Y[3], B[5], W[5]= G[5], Y[3], B[5]
-    G[5] = temp
-def OCCW():
-    # W_clockwise
-    temp= O[5]
-    O[3],O[7],O[5]=O[1],O[3],O[7]
-    O[1]=temp
-
-    temp = O[2]
-    O[6], O[8], O[2]= O[0], O[6], O[8]
-    O[0]=temp
-
-    temp = G[2]
-    G[2], Y[6], B[2] = Y[6], B[2], W[2]
-    W[2] = temp
-
-    temp = G[8]
-    G[8],Y[0],B[8] = Y[0],B[8],W[8]
-    W[8] = temp
-
-    temp = G[5]
-    G[5], Y[3], B[5] = Y[3], B[5], W[5]
-    W[5] = temp
-def RCW():
-    # R_clockwise
-    temp = R[1]
-    R[1], R[3], R[7] = R[3], R[7], R[5]
-    R[5] = temp
-
-    temp = R[0]
-    R[0], R[6], R[8] =R[6], R[8], R[2]
-    R[2] = temp
-
-    temp = G[0]
-    G[0], Y[8], B[0] =Y[8], B[0], W[0]
-    W[0] = temp
-
-    temp = G[3]
-    G[3], Y[5], B[3] = Y[5], B[3], W[3]
-    W[3] = temp
-
-    temp = G[6]
-    G[6], Y[2], B[6] = Y[2], B[6], W[6]
-    W[6] = temp
-def RCCW():
-    # R_counterclockwise
-    temp = R[5]
-    R[3], R[7], R[5] = R[1], R[3], R[7]
-    R[1] = temp
-
-    temp = R[2]
-    R[6], R[8], R[2] = R[0], R[6], R[8]
-    R[0] = temp
-
-    temp = W[0]
-    Y[8], B[0], W[0] = G[0], Y[8], B[0]
-    G[0] = temp
-
-    temp =  W[3]
-    Y[5], B[3], W[3] = G[3], Y[5], B[3]
-    G[3] = temp
-
-    temp =  W[6]
-    Y[2], B[6], W[6] = G[6], Y[2], B[6]
-    G[6] = temp
-def BCW():
-    # B_clockwise
-    temp = B[1]
-    B[1], B[3], B[7] = B[3], B[7], B[5]
-    B[5] = temp
-
-    temp = B[0]
-    B[0], B[6], B[8] =B[6], B[8], B[2]
-    B[2] = temp
-
-    temp = Y[6]
-    W[6], O[6], Y[6] =R[6], W[6], O[6]
-    R[6] = temp
-
-    temp = Y[7]
-    W[7], O[7], Y[7] = R[7], W[7], O[7]
-    R[7] = temp
-
-    temp = Y[8]
-    W[8], O[8], Y[8] = R[8], W[8], O[8]
-    R[8] = temp
-def BCCW():
-    # B_counterclockwise
-    temp = B[5]
-    B[3], B[7], B[5] = B[1], B[3], B[7]
-    B[1] = temp
-
-    temp = B[2]
-    B[6], B[8], B[2]= B[0], B[6], B[8]
-    B[0] = temp
+    temp = YELLOW[2]
+    WHITE[2], ORANGE[2], YELLOW[2], RED[2] = RED[2], WHITE[2], ORANGE[2], temp
 
 
-    temp = R[6]
-    R[6], W[6], O[6] = W[6], O[6], Y[6]
-    Y[6] = temp
+def rotate_blue_clockwise():
+    # Rotate the blue face clockwise
+    temp = BLUE[1]
+    BLUE[1], BLUE[3], BLUE[7], BLUE[5] = BLUE[3], BLUE[7], BLUE[5], temp
 
-    temp = R[7]
-    R[7], W[7], O[7] = W[7], O[7], Y[7]
-    Y[7] = temp
+    temp = BLUE[0]
+    BLUE[0], BLUE[6], BLUE[8], BLUE[2] = BLUE[6], BLUE[8], BLUE[2], temp
 
-    temp = R[8]
-    R[8], W[8], O[8] = W[8], O[8], Y[8]
-    Y[8] = temp
-def GCW():
-    # G_clockwise
-    temp = G[1]
-    G[1], G[3], G[7] = G[3], G[7], G[5]
-    G[5] = temp
+    # Update adjacent face edges
+    temp = YELLOW[6]
+    WHITE[6], ORANGE[6], YELLOW[6], RED[6] = RED[6], WHITE[6], ORANGE[6], temp
 
-    temp = G[0]
-    G[0], G[6], G[8] = G[6], G[8], G[2]
-    G[2] = temp
+    temp = YELLOW[7]
+    WHITE[7], ORANGE[7], YELLOW[7], RED[7] = RED[7], WHITE[7], ORANGE[7], temp
 
-    temp = R[0]
-    R[0], W[0], O[0] = W[0], O[0], Y[0]
-    Y[0] = temp
+    temp = YELLOW[8]
+    WHITE[8], ORANGE[8], YELLOW[8], RED[8] = RED[8], WHITE[8], ORANGE[8], temp
 
-    temp = R[1]
-    R[1], W[1], O[1] = W[1], O[1], Y[1]
-    Y[1] = temp
 
-    temp = R[2]
-    R[2], W[2], O[2] = W[2], O[2], Y[2]
-    Y[2] = temp
-def GCCW():
-    # G_counterclockwise
-    temp = G[5]
-    G[3], G[7], G[5] = G[1], G[3], G[7]
-    G[1] = temp
+def rotate_blue_counterclockwise():
+    # Rotate the blue face counterclockwise
+    temp = BLUE[5]
+    BLUE[3], BLUE[7], BLUE[5], BLUE[1] = BLUE[1], BLUE[3], BLUE[7], temp
 
-    temp = G[2]
-    G[6], G[8], G[2] = G[0], G[6], G[8]
-    G[0] = temp
+    temp = BLUE[2]
+    BLUE[6], BLUE[8], BLUE[2], BLUE[0] = BLUE[0], BLUE[6], BLUE[8], temp
 
-    temp = Y[0]
-    W[0], O[0], Y[0] = R[0], W[0], O[0]
-    R[0] = temp
+    # Update adjacent face edges
+    temp = RED[6]
+    RED[6], WHITE[6], ORANGE[6], YELLOW[6] = WHITE[6], ORANGE[6], YELLOW[6], temp
 
-    temp = Y[1]
-    W[1], O[1], Y[1] = R[1], W[1], O[1]
-    R[1] = temp
+    temp = RED[7]
+    RED[7], WHITE[7], ORANGE[7], YELLOW[7] = WHITE[7], ORANGE[7], YELLOW[7], temp
 
-    temp = Y[2]
-    W[2], O[2], Y[2] = R[2], W[2], O[2]
-    R[2] = temp
-def GreenDaisy(green_postion):
-    if green_postion == 0:
-        GCW();OCW();GCCW()
-        #print('GCW();OCW();GCCW()')
-    if green_postion == 1:
-        RCCW()
-        #print('RCCW()')
-    if green_postion == 2:
-        OCW()
-        #print('OCW()')
-    if green_postion == 3:
-        GCW();RCCW();GCCW()
-        #print('GCW();RCCW();GCCW()')
-def OrangeDaisy(orange_postion):
-    if orange_postion == 2:
-        OCW();BCW();OCCW()
-        #print('OCW();BCW();OCCW()')
-    if orange_postion == 0:
-        GCCW()
-        #print('GCCW()')
-    if orange_postion == 3:
-        BCW()
-        #print('BCW()')
-    if orange_postion == 1:
-        OCW();GCCW();OCCW()
-        #print('OCW();GCCW();OCCW()')
-def BlueDaisy(blue_postion):
-    if blue_postion == 3:
-        BCW();RCW();BCCW()
-        #print('BCW();RCW();BCCW()')
-    if blue_postion == 2:
-        OCCW()
-        #print('OCCW()')
-    if blue_postion == 1:
-        RCW()
-        #print('RCW()')
-    if blue_postion == 0:
-        BCW();OCCW();BCCW()
-        #print('BCW();OCCW();BCCW()')
-def RedDaisy(red_postion):
-    if red_postion == 1:
-        RCW();GCW();RCCW()
-        #print('BCW();RCW();BCCW()')
-    if red_postion == 3:
-        BCCW()
-        #print('OCCW()')
-    if red_postion == 0:
-        GCW()
-        #print('RCW()')
-    if red_postion == 2:
-        RCW();BCCW();RCCW()
-        #print('BCW();OCCW();BCCW()')
-def Oll(cross):
-    if cross ==0:
-        BCW();RCW();YCW();RCCW();YCCW();RCW();YCW();RCCW();YCCW();BCCW();YCW();BCW();RCW();YCW();RCCW();YCCW();BCCW()
-def Cube():
+    temp = RED[8]
+    RED[8], WHITE[8], ORANGE[8], YELLOW[8] = WHITE[8], ORANGE[8], YELLOW[8], temp
+
+
+def solve_green_daisy(green_position):
+    if green_position == 0:
+        rotate_green_clockwise()
+        rotate_orange_clockwise()
+        rotate_green_counterclockwise()
+    elif green_position == 1:
+        rotate_red_counterclockwise()
+    elif green_position == 2:
+        rotate_orange_clockwise()
+    elif green_position == 3:
+        rotate_green_clockwise()
+        rotate_red_counterclockwise()
+        rotate_green_counterclockwise()
+
+
+def solve_orange_daisy(orange_position):
+    if orange_position == 2:
+        rotate_orange_clockwise()
+        rotate_blue_clockwise()
+        rotate_orange_counterclockwise()
+    elif orange_position == 0:
+        rotate_green_counterclockwise()
+    elif orange_position == 3:
+        rotate_blue_clockwise()
+    elif orange_position == 1:
+        rotate_orange_clockwise()
+        rotate_green_counterclockwise()
+        rotate_orange_counterclockwise()
+
+
+def solve_blue_daisy(blue_position):
+    if blue_position == 3:
+        rotate_blue_clockwise()
+        rotate_red_clockwise()
+        rotate_blue_counterclockwise()
+    elif blue_position == 2:
+        rotate_orange_counterclockwise()
+    elif blue_position == 1:
+        rotate_red_clockwise()
+    elif blue_position == 0:
+        rotate_blue_clockwise()
+        rotate_orange_counterclockwise()
+        rotate_blue_counterclockwise()
+
+
+def solve_red_daisy(red_position):
+    if red_position == 1:
+        rotate_red_clockwise()
+        rotate_green_clockwise()
+        rotate_red_counterclockwise()
+    elif red_position == 3:
+        rotate_blue_counterclockwise()
+    elif red_position == 0:
+        rotate_green_clockwise()
+    elif red_position == 2:
+        rotate_red_clockwise()
+        rotate_blue_counterclockwise()
+        rotate_red_counterclockwise()
+
+
+def orient_last_layer(cross_type):
+    if cross_type == 0:
+        # Algorithm for OLL when no edges are oriented correctly
+        rotate_blue_clockwise()
+        rotate_red_clockwise()
+        rotate_yellow_clockwise()
+        rotate_red_counterclockwise()
+        rotate_yellow_counterclockwise()
+        rotate_red_clockwise()
+        rotate_yellow_clockwise()
+        rotate_red_counterclockwise()
+        rotate_yellow_counterclockwise()
+        rotate_blue_counterclockwise()
+        rotate_yellow_clockwise()
+        rotate_blue_clockwise()
+        rotate_red_clockwise()
+        rotate_yellow_clockwise()
+        rotate_red_counterclockwise()
+        rotate_yellow_counterclockwise()
+        rotate_blue_counterclockwise()
+
+
+def solve_daisy(GREEN, ORANGE, WHITE, RED, YELLOW, BLUE):
+    daisy_solved = False
+    attempts = 1
+    while not daisy_solved:
+        white_edge = (WHITE[1], WHITE[3], WHITE[5], WHITE[7])
+        green_edge = (GREEN[1], GREEN[3], GREEN[5], GREEN[7])
+        orange_edge = (ORANGE[1], ORANGE[3], ORANGE[5], ORANGE[7])
+        red_edge = (RED[1], RED[3], RED[5], RED[7])
+        blue_edge = (BLUE[1], BLUE[3], BLUE[5], BLUE[7])
+
+        white_edge_moves = [rotate_green_clockwise, rotate_red_clockwise, rotate_orange_clockwise, rotate_blue_clockwise]
+
+        # Move white edges from the white face to the yellow face
+        if 'w' in white_edge:
+            for i, edge in enumerate(white_edge):
+                if edge == 'w':
+                    white_edge_moves[i]()
+                    white_edge_moves[i]()
+
+        # Solve white edges on other faces
+        for i, edge in enumerate(green_edge):
+            if edge == 'w':
+                solve_green_daisy(i)
+
+        for i, edge in enumerate(orange_edge):
+            if edge == 'w':
+                solve_orange_daisy(i)
+
+        for _ in range(random.randrange(1, 3)):
+            rotate_yellow_counterclockwise()
+
+        for i, edge in enumerate(blue_edge):
+            if edge == 'w':
+                solve_blue_daisy(i)
+
+        for i, edge in enumerate(red_edge):
+            if edge == 'w':
+                solve_red_daisy(i)
+
+        if YELLOW[1] == 'w' and YELLOW[3] == 'w' and YELLOW[5] == 'w' and YELLOW[7] == 'w':
+            print(f"Daisy solved in {attempts} attempts")
+            daisy_solved = True
+        else:
+            attempts += 1
+            #sleep(.1)
+            #visualize_cube()
+
+
+def solve_white_cross(GREEN, ORANGE, WHITE, RED, YELLOW, BLUE):
+    # Solve the white cross
+    for _ in range(4):
+        if GREEN[1] == 'g' and YELLOW[1] == 'w':
+            rotate_green_clockwise()
+            rotate_green_clockwise()
+            break
+        else:
+            rotate_yellow_clockwise()
+
+    for _ in range(4):
+        if ORANGE[5] == 'o' and YELLOW[3] == 'w':
+            rotate_orange_clockwise()
+            rotate_orange_clockwise()
+            break
+        else:
+            rotate_yellow_clockwise()
+
+    for _ in range(4):
+        if BLUE[7] == 'b' and YELLOW[7] == 'w':
+            rotate_blue_clockwise()
+            rotate_blue_clockwise()
+            break
+        else:
+            rotate_yellow_clockwise()
+
+    for _ in range(4):
+        if RED[3] == 'r' and YELLOW[5] == 'w':
+            rotate_red_clockwise()
+            rotate_red_clockwise()
+            break
+        else:
+            rotate_yellow_clockwise()
+
+
+def solve_white_face(Green, Orange, White, Red, Yellow, Blue):
+    # This function solves the white face of the Rubik's cube by positioning white corner pieces correctly
+
+    while True:
+        # Check the green-orange-yellow and green-orange-white corners
+        green_orange_yellow_corner = (Green[2], Orange[2], Yellow[0])
+        green_orange_white_corner = (Green[8], Orange[0], White[2])
+
+        # If white is in any of the corners, adjust its position
+        if 'w' in green_orange_white_corner or 'w' in green_orange_yellow_corner:
+            if White[2] == 'w':  # If the white piece is already in place
+                break
+            else:
+                # Keep rotating until white is aligned
+                while White[2] != 'w':
+                    rotate_orange_clockwise();
+                    rotate_yellow_clockwise();
+                    rotate_orange_counterclockwise();
+                    rotate_yellow_counterclockwise()
+        else:
+            rotate_yellow_clockwise()  # Rotate the top layer to search for white
+
+    while True:
+        # Check the orange-blue-yellow and orange-blue-white corners
+        orange_blue_yellow_corner = (Orange[8], Blue[8], Yellow[6])
+        orange_blue_white_corner = (Orange[6], Blue[2], White[8])
+
+        if 'w' in orange_blue_yellow_corner or 'w' in orange_blue_white_corner:
+            if White[8] == 'w':  # White piece is in place
+                break
+            else:
+                while White[8] != 'w':
+                    rotate_blue_clockwise();
+                    rotate_yellow_clockwise();
+                    rotate_blue_counterclockwise();
+                    rotate_yellow_counterclockwise()
+        else:
+            rotate_yellow_clockwise()
+
+    while True:
+        # Check the blue-red-yellow and blue-red-white corners
+        blue_red_yellow_corner = (Blue[6], Red[6], Yellow[8])
+        blue_red_white_corner = (Blue[0], Red[8], White[6])
+
+        if 'w' in blue_red_yellow_corner or 'w' in blue_red_white_corner:
+            if White[6] == 'w':
+                break
+            else:
+                while White[6] != 'w':
+                    rotate_red_clockwise();
+                    rotate_yellow_clockwise();
+                    rotate_red_counterclockwise();
+                    rotate_yellow_counterclockwise()
+        else:
+            rotate_yellow_clockwise()
+
+    while True:
+        # Check the red-green-yellow and red-green-white corners
+        red_green_yellow_corner = (Red[0], Green[0], Yellow[2])
+        red_green_white_corner = (Red[2], Green[6], White[0])
+
+        if 'w' in red_green_yellow_corner or 'w' in red_green_white_corner:
+            if White[0] == 'w':
+                break
+            else:
+                while White[0] != 'w':
+                    rotate_green_clockwise();
+                    rotate_yellow_clockwise();
+                    rotate_green_counterclockwise();
+                    rotate_yellow_counterclockwise()
+        else:
+            rotate_yellow_clockwise()
+
+    # Correct the orientation of the white corners
+    while True:
+        # Check if the green edge piece is in the correct position
+        if Green[8] == "g":  # If the green face is aligned correctly
+            break
+        elif Orange[6] == "g":  # If orange face contains the green piece, move it to the correct face
+            rotate_blue_clockwise();
+            rotate_yellow_clockwise();
+            rotate_blue_counterclockwise();
+            rotate_orange_counterclockwise()
+            rotate_green_clockwise();
+            rotate_orange_clockwise();
+            rotate_green_counterclockwise();
+            rotate_yellow_counterclockwise()
+            rotate_orange_clockwise();
+            rotate_blue_counterclockwise();
+            rotate_orange_counterclockwise();
+            rotate_blue_clockwise()
+            break
+        elif Blue[0] == "g":  # If blue face contains the green piece
+            rotate_orange_clockwise();
+            rotate_red_clockwise();
+            rotate_yellow_clockwise();
+            rotate_yellow_clockwise()
+            rotate_orange_counterclockwise();
+            rotate_red_counterclockwise()
+            break
+        elif Red[2] == "g":  # If red face contains the green piece
+            rotate_orange_clockwise();
+            rotate_yellow_clockwise();
+            rotate_orange_counterclockwise()
+            rotate_green_counterclockwise();
+            rotate_red_clockwise();
+            rotate_green_clockwise()
+            rotate_red_counterclockwise();
+            rotate_yellow_counterclockwise()
+            rotate_green_clockwise();
+            rotate_orange_counterclockwise();
+            rotate_green_counterclockwise();
+            rotate_orange_clockwise()
+            break
+    while True:
+        # Check if the orange edge piece is in the correct position
+        if Orange[6] == "o":
+            break
+        elif Blue[0] == "o": # If the blue face has the orange edge, reposition it
+            rotate_red_clockwise();
+            rotate_yellow_clockwise();
+            rotate_red_counterclockwise();
+            rotate_blue_counterclockwise()
+            rotate_orange_clockwise();
+            rotate_blue_clockwise();
+            rotate_orange_counterclockwise();
+            rotate_yellow_counterclockwise()
+            rotate_blue_clockwise();
+            rotate_red_counterclockwise();
+            rotate_blue_counterclockwise();
+            rotate_red_clockwise()
+            break
+
+        elif Red[2] == "o": # If the red face has the orange edge
+            rotate_blue_clockwise();
+            rotate_green_clockwise();
+            rotate_yellow_clockwise();
+            rotate_yellow_clockwise()
+            rotate_blue_counterclockwise();
+            rotate_green_counterclockwise()
+            break
+
+    while True:
+        # Check if the blue edge piece is in the correct position
+        if Blue[0] == "b":
+            break
+
+        else: # If the blue edge is not in the correct position
+            rotate_green_clockwise();
+            rotate_yellow_clockwise();
+            rotate_green_counterclockwise();
+            rotate_red_counterclockwise()
+            rotate_blue_clockwise();
+            rotate_red_clockwise(); rotate_blue_counterclockwise();
+            rotate_yellow_counterclockwise()
+            rotate_red_clockwise();
+            rotate_green_counterclockwise();
+            rotate_red_counterclockwise();
+            rotate_green_clockwise()
+
+
+def solve_second_layer(Green, Orange, White, Red, Yellow, Blue):
+    # Solve the second layer by positioning the edge pieces correctly
+
+    while True:
+        green_top_edge = (Green[1], Yellow[1])  # Check the green-yellow edge
+
+        if Green[5] == 'g' and Orange[1] == 'o':
+            break
+        if Green[5] == 'y' or Orange[1] == 'y':
+            break
+        if 'y' in green_top_edge:
+            rotate_yellow_clockwise();
+            rotate_orange_clockwise();
+            rotate_yellow_clockwise()
+            rotate_orange_counterclockwise();
+            rotate_yellow_counterclockwise();
+            rotate_green_counterclockwise();
+            rotate_yellow_counterclockwise()
+            rotate_green_clockwise()
+        rotate_yellow_clockwise()
+
+    while True:
+        orange_top_edge = (Orange[5], Yellow[3])  # Check the orange-yellow edge
+
+        if Orange[7] == 'o' and Blue[5] == 'b':
+            break
+        if Orange[7] == 'y' or Blue[5] == 'y':
+            break
+        if 'y' in orange_top_edge:
+            rotate_yellow_clockwise();
+            rotate_blue_clockwise();
+            rotate_yellow_clockwise()
+            rotate_blue_counterclockwise();
+            rotate_yellow_counterclockwise();
+            rotate_orange_counterclockwise();
+            rotate_yellow_counterclockwise()
+            rotate_orange_clockwise()
+        rotate_yellow_clockwise()
+
+    while True:
+        blue_top_edge = (Blue[7], Yellow[7])  # Check the blue-yellow edge
+
+        if Blue[3] == 'b' and Red[7] == 'r':
+            break
+        if Blue[3] == 'y' or Red[7] == 'y':
+            break
+        if 'y' in blue_top_edge:
+            rotate_yellow_clockwise();
+            rotate_red_clockwise();
+            rotate_yellow_clockwise()
+            rotate_red_counterclockwise();
+            rotate_yellow_counterclockwise();
+            rotate_blue_counterclockwise();
+            rotate_yellow_counterclockwise()
+            rotate_blue_clockwise()
+        rotate_yellow_clockwise()
+
+    while True:
+        red_top_edge = (Red[3], Yellow[5])  # Check the red-yellow edge
+
+        if Red[1] == 'r' and Green[3] == 'g':
+            break
+        if Red[1] == 'y' or Green[3] == 'y':
+            break
+        if 'y' in red_top_edge:
+            rotate_yellow_clockwise();
+            rotate_green_clockwise();
+            rotate_yellow_clockwise()
+            rotate_green_counterclockwise();
+            rotate_yellow_counterclockwise();
+            rotate_red_counterclockwise();
+            rotate_yellow_counterclockwise()
+            rotate_red_clockwise()
+        rotate_yellow_clockwise()
+
+    # Now we correct misaligned pieces by inserting them into the second layer
+    while True:
+        if Green[5] == 'g' and Orange[1] == 'o':
+            break
+        if Green[1] == 'g' and Yellow[1] == 'o':
+            rotate_yellow_clockwise();
+            rotate_orange_clockwise();
+            rotate_yellow_clockwise()
+            rotate_orange_counterclockwise();
+            rotate_yellow_counterclockwise();
+            rotate_green_counterclockwise();
+            rotate_yellow_counterclockwise()
+            rotate_green_clockwise()
+            break
+        if Orange[5] == 'o' and Yellow[3] == 'g':
+            rotate_yellow_counterclockwise();
+            rotate_green_counterclockwise();
+            rotate_yellow_clockwise()
+            rotate_green_clockwise();
+            rotate_orange_counterclockwise();
+            rotate_green_clockwise();
+            rotate_orange_clockwise();
+            rotate_green_counterclockwise()
+            break
+        rotate_yellow_clockwise()
+
+    while True:
+        if Orange[7] == 'o' and Blue[5] == 'b':
+            break
+        if Orange[5] == 'o' and Yellow[3] == 'b':
+            rotate_yellow_clockwise();
+            rotate_blue_clockwise();
+            rotate_yellow_clockwise()
+            rotate_blue_counterclockwise();
+            rotate_yellow_counterclockwise();
+            rotate_orange_counterclockwise();
+            rotate_yellow_counterclockwise()
+            rotate_orange_clockwise()
+            break
+        if Blue[7] == 'b' and Yellow[7] == 'o':
+            rotate_yellow_counterclockwise();
+            rotate_orange_counterclockwise();
+            rotate_yellow_clockwise()
+            rotate_orange_clockwise();
+            rotate_blue_counterclockwise();
+            rotate_orange_clockwise();
+            rotate_blue_clockwise();
+            rotate_orange_counterclockwise()
+            break
+        rotate_yellow_clockwise()
+
+    while True:
+        if Blue[3] == 'b' and Red[7] == 'r':
+            break
+        if Blue[7] == 'b' and Yellow[7] == 'r':
+            rotate_yellow_clockwise();
+            rotate_red_clockwise();
+            rotate_yellow_clockwise()
+            rotate_red_counterclockwise();
+            rotate_yellow_counterclockwise();
+            rotate_blue_counterclockwise();
+            rotate_yellow_counterclockwise()
+            rotate_blue_clockwise()
+            break
+        if Red[3] == 'r' and Yellow[5] == 'b':
+            rotate_yellow_counterclockwise();
+            rotate_blue_counterclockwise();
+            rotate_yellow_clockwise()
+            rotate_blue_clockwise();
+            rotate_red_counterclockwise();
+            rotate_blue_clockwise();
+            rotate_red_clockwise();
+            rotate_blue_counterclockwise()
+            break
+        rotate_yellow_clockwise()
+
+    while True:
+        if Red[1] == 'r' and Green[3] == 'g':
+            break
+        if Red[3] == 'r' and Yellow[5] == 'g':
+            rotate_yellow_clockwise();
+            rotate_green_clockwise();
+            rotate_yellow_clockwise()
+            rotate_green_counterclockwise();
+            rotate_yellow_counterclockwise();
+            rotate_red_counterclockwise();
+            rotate_yellow_counterclockwise()
+            rotate_red_clockwise()
+            break
+        if Green[1] == 'g' and Yellow[1] == 'r':
+            rotate_yellow_counterclockwise();
+            rotate_red_counterclockwise();
+            rotate_yellow_clockwise()
+            rotate_red_clockwise();
+            rotate_green_counterclockwise();
+            rotate_red_clockwise();
+            rotate_green_clockwise();
+            rotate_red_counterclockwise()
+            break
+        rotate_yellow_clockwise()
+
+
+
+
+
+def visualize_cube():
+    # Display the current state of the cube
     print(space)
-    print(space, sides, G[0], G[1], G[2], sides)
-    print(space, sides, G[3], G[4], G[5], sides)
-    print(space, sides, G[6], G[7], G[8], sides)
-    print(sides, R[0], R[1], R[2], sides, W[0], W[1], W[2], sides, O[0], O[1], O[2], sides, Y[0], Y[1], Y[2], sides)
-    print(sides, R[3], R[4], R[5], sides, W[3], W[4], W[5], sides, O[3], O[4], O[5], sides, Y[3], Y[4], Y[5], sides)
-    print(sides, R[6], R[7], R[8], sides, W[6], W[7], W[8], sides, O[6], O[7], O[8], sides, Y[6], Y[7], Y[8], sides)
-    print(space, sides, B[0], B[1], B[2], sides)
-    print(space, sides, B[3], B[4], B[5], sides)
-    print(space, sides, B[6], B[7], B[8], sides)
-def sexymove():
-    OCW()
+    print(space, sides, GREEN[0], GREEN[1], GREEN[2], sides)
+    print(space, sides, GREEN[3], GREEN[4], GREEN[5], sides)
+    print(space, sides, GREEN[6], GREEN[7], GREEN[8], sides)
+    print(sides, RED[0], RED[1], RED[2], sides, WHITE[0], WHITE[1], WHITE[2], sides, ORANGE[0], ORANGE[1], ORANGE[2], sides, YELLOW[0], YELLOW[1], YELLOW[2], sides)
+    print(sides, RED[3], RED[4], RED[5], sides, WHITE[3], WHITE[4], WHITE[5], sides, ORANGE[3], ORANGE[4], ORANGE[5], sides, YELLOW[3], YELLOW[4], YELLOW[5], sides)
+    print(sides, RED[6], RED[7], RED[8], sides, WHITE[6], WHITE[7], WHITE[8], sides, ORANGE[6], ORANGE[7], ORANGE[8], sides, YELLOW[6], YELLOW[7], YELLOW[8], sides)
+    print(space, sides, BLUE[0], BLUE[1], BLUE[2], sides)
+    print(space, sides, BLUE[3], BLUE[4], BLUE[5], sides)
+    print(space, sides, BLUE[6], BLUE[7], BLUE[8], sides)
 
-    WCW()
 
-    OCCW()
+def scramble_cube(num_moves):
+    # Scramble the cube with a given number of random moves
+    scramble_sequence = []
+    for i in range(num_moves):
+        move = random.randint(1, 12)
+        if len(scramble_sequence) > 0:
+            # Avoid immediate reverse moves
+            if move % 2 != 0 and scramble_sequence[i-1] == move + 1:
+                move += 1
+            elif move % 2 == 0 and scramble_sequence[i-1] == move - 1:
+                move -= 1
+        if len(scramble_sequence) > 1:
+            # Avoid three consecutive identical moves
+            if move == scramble_sequence[i-1] and scramble_sequence[i-1] == scramble_sequence[i-2]:
+                move += 1
 
-    WCW()
+        move = 12 if move == 0 else 1 if move == 13 else move
 
-    OCW()
-    WCW()
-    WCW()
-    OCCW()
-def centers():
-    GCCW()
-    BCW()
-    WCW()
-    YCCW()
-def scramble(moves):
-    scramble=[]
-    for i in range(moves):
-        x=random.randint(1, 12)
-        if len(scramble) > 0:
-            #print(x,scramble[i-1])
-            if x % 2 != 0 and scramble[i-1] == x+1:
-                #print(x,scramble[i-1])
-                x+=1
-            elif x % 2 == 0 and scramble[i-1] == x-1:
-                #print(x,scramble[i-1])
-                x-=1
-        if len(scramble) > 1:
-            if x == scramble[i-1] and scramble[i-1] == scramble[i-2]:
-                x+=1
+        scramble_sequence.append(move)
 
-        if x ==0:
-            x=12
-        if x==13:
-            x=1
+    # Execute the scramble moves
+    move_mapping = {
+        1: (rotate_white_clockwise, "F"),
+        2: (rotate_white_counterclockwise, "F'"),
+        3: (rotate_yellow_clockwise, "B"),
+        4: (rotate_yellow_counterclockwise, "B'"),
+        5: (rotate_green_clockwise, "U"),
+        6: (rotate_green_counterclockwise, "U'"),
+        7: (rotate_blue_clockwise, "D"),
+        8: (rotate_blue_counterclockwise, "D'"),
+        9: (rotate_orange_clockwise, "R"),
+        10: (rotate_orange_counterclockwise, "R'"),
+        11: (rotate_red_clockwise, "L"),
+        12: (rotate_red_counterclockwise, "L'")
+    }
 
-        scramble.append(x)
-    for i in range(len(scramble)):
+    for i in range(len(scramble_sequence)):
 
-        if scramble[i]==1:
-            WCW()
-            scramble[i]="F"
-        elif scramble[i]==2:
-            WCCW()
-            scramble[i]="F'"
-        elif scramble[i]==3:
-            YCW()
-            scramble[i]="B"
-        elif scramble[i]==4:
-            YCCW()
-            scramble[i]="B'"
-        elif scramble[i]==5:
-            GCW()
-            scramble[i]="U"
-        elif scramble[i]==6:
-            GCCW()
-            scramble[i]="U'"
+        move_function, move_notation = move_mapping[scramble_sequence[i]]
+        move_function()#print(move_notation);visualize_cube()
+        scramble_sequence[i] = move_notation
 
-        elif scramble[i]==7:
-            BCW()
-            scramble[i]="D"
-        elif scramble[i]==8:
-            BCCW()
-            scramble[i]="D'"
+    print(*scramble_sequence)
+    return scramble_sequence
 
-        elif scramble[i]==9:
-            OCW()
-            scramble[i]="R"
-        elif scramble[i]==10:
-            OCCW()
-            scramble[i]="R'"
-
-        elif scramble[i]==11:
-            RCW()
-            scramble[i]="L"
-        elif scramble[i]==12:
-            RCCW()
-            scramble[i]="L'"
-    print(*scramble)
-    return scramble
 def controls():
     user_move = input('move? ').upper()
 
@@ -437,305 +824,33 @@ def controls():
         move_set[user_move]()
     else:
         print('doesnt exist')
-def edges(G,O,W,R,Y,B):
-    edges=[G[1]+Y[1], G[3]+R[1], G[5]+O[1], G[7]+W[1],
-           R[3]+Y[5], Y[3]+O[5], O[3]+W[5], W[3]+R[5],
-           B[1]+W[7], B[3]+R[7], B[5]+O[7], B[7]+Y[7],]
-    for i in range(len(edges)):
-        if 'w' in edges[i]:
-            edges[i]=Fore.GREEN + edges[i]+ Style.RESET_ALL
-    print(*edges)
-
-def daisy(G,O,W,R,Y,B):
-    Daisy = False
-    trials=1
-    while Daisy == False:
-
-        white_edge, green_edge, orange_edge, red_edge, blue_edge=(W[1],W[3],W[5],W[7]), (G[1],G[3],G[5],G[7]), (O[1],O[3],O[5],O[7]), (R[1],R[3],R[5],R[7]), (B[1],B[3],B[5],B[7])
-
-        whiteedgemove = {0: GCW, 1: RCW, 2: OCW, 3: BCW}
-        greenedgemove = {0: GreenDaisy, 1: GreenDaisy, 2: GreenDaisy, 3: GreenDaisy}
-        orangeedgemove = {0: OrangeDaisy, 1: OrangeDaisy, 2: OrangeDaisy, 3: OrangeDaisy}
-        blueedgemove = {0: BlueDaisy, 1: BlueDaisy, 2: BlueDaisy, 3: BlueDaisy}
-        rededgemove = {0: RedDaisy, 1: RedDaisy, 2: RedDaisy, 3: RedDaisy}
-        if 'w' in white_edge:
-            for i in range(len(white_edge)):
-                if 'w' in white_edge[i]:
-                    whiteedgemove[i]();whiteedgemove[i]()
-                    #print('2x'+str(whiteedgemove[i]))
 
 
-        if 'w' in green_edge:
-            for i in range(len(green_edge)):
-                if 'w' in green_edge[i]:
-                    greenedgemove[i](i)
+# Define move sets and options
+sides = '|'
+move_set = {
+    "F": rotate_white_clockwise, "F'": rotate_white_counterclockwise,
+    "B": rotate_yellow_clockwise, "B'": rotate_yellow_counterclockwise,
+    "U": rotate_green_clockwise, "U'": rotate_green_counterclockwise,
+    "D": rotate_blue_clockwise, "D'": rotate_blue_counterclockwise,
+    "R": rotate_orange_clockwise, "R'": rotate_orange_counterclockwise,
+    "L": rotate_red_clockwise, "L'": rotate_red_counterclockwise
+}
 
-
-        if 'w' in orange_edge:
-            for i in range(len(orange_edge)):
-                if 'w' in orange_edge[i]:
-                    orangeedgemove[i](i)
-
-        for i in range(random.randrange(1, 3)):
-            YCCW()
-        if 'w' in blue_edge:
-            for i in range(len(blue_edge)):
-                if 'w' in blue_edge[i]:
-                    blueedgemove[i](i)
-
-        if 'w' in red_edge:
-            for i in range(len(red_edge)):
-                if 'w' in red_edge[i]:
-                    rededgemove[i](i)
-
-
-        if Y[1] == 'w' and Y[3] == 'w' and Y[5] == 'w' and Y[7] == 'w':
-            print(trials,'done')
-            #Cube()
-            Daisy = True
-        else:
-            trials+=1
-            #print('one more!')
-        sleep(0)
-def White_Cross(G,O,W,R,Y,B):
-
-    green, orange, blue, red = False, False, False, False
-    while True:
-        #print('test')
-        if G[1]=='g' and Y[1] == 'w':
-            GCW();GCW()
-            break
-
-        else:
-
-            YCW()
-
-    while True:
-        if O[5]=='o' and Y[3] == 'w':
-            OCW();OCW()
-            break
-
-
-        else:
-            YCW()
-    while True:
-        if B[7]=='b' and Y[7] == 'w':
-            BCW();BCW()
-            break
-        else:
-            YCW()
-    while True:
-        if R[3]=='r' and Y[5] == 'w':
-            RCW();RCW()
-            break
-        else:
-            YCW()
-    #Cube()
-def White_Face(G,O,W,R,Y,B):
-
-    while True:
-        GOY_corner, GOW_corner = (G[2], O[2], Y[0]), (G[8], O[0], W[2])
-        if 'w' in GOW_corner or 'w' in GOY_corner:
-            if W[2] == 'w':
-                break
-            else:
-                while W[2]!='w':
-                    OCW();YCW();OCCW();YCCW()
-        else:
-            YCW()
-    while True:
-        OBY_corner, OBW_corner = (O[8], B[8], Y[6]), (O[6], B[2], W[8])
-        if 'w' in OBY_corner or 'w' in OBW_corner:
-            if W[8] == 'w':
-                break
-            else:
-                while W[8]!='w':
-                    BCW();YCW();BCCW();YCCW()
-        else:
-            YCW()
-    while True:
-        BRY_corner, BRW_corner = (B[6], R[6], Y[8]), (B[0], R[8], W[6])
-        if 'w' in BRY_corner or 'w' in BRW_corner:
-            if W[6] == 'w':
-                break
-            else:
-                while W[6]!='w':
-                    RCW();YCW();RCCW();YCCW()
-        else:
-            YCW()
-    while True:
-        RGY_corner, RGW_corner = (R[0], G[0], Y[2]), (R[2], G[6], W[0])
-        if 'w' in RGY_corner or 'w' in RGW_corner:
-            if W[0] == 'w':
-                break
-            else:
-                while W[0]!='w':
-                    GCW();YCW();GCCW();YCCW()
-        else:
-            YCW()
-    while True:
-        if G[8]=="g":
-            break
-        elif O[6]=="g":
-            BCW();YCW();BCCW();OCCW();GCW();OCW();GCCW();YCCW();OCW();BCCW();OCCW();BCW()
-            break
-        elif B[0] == "g":
-            OCW();RCW();YCW();YCW();OCCW();RCCW()
-            break
-        elif R[2] == "g":
-            OCW();YCW();OCCW();GCCW();RCW();GCW();RCCW();YCCW();GCW();OCCW();GCCW();OCW()
-            break
-    while True:
-        if O[6] == "o":
-            break
-        elif B[0]=="o":
-            RCW();YCW();RCCW();BCCW();OCW();BCW();OCCW();YCCW();BCW();RCCW();BCCW();RCW()
-            break
-        elif R[2] == "o":
-            BCW();GCW();YCW();YCW();BCCW();GCCW()
-            break
-    while True:
-        if B[0] == "b":
-            break
-        else:
-            GCW();YCW();GCCW();RCCW();BCW();RCW();BCCW();YCCW();RCW();GCCW();RCCW();GCW()
-def Second_Layer(G,O,W,R,Y,B):
-
-    while True:
-        Gtop = (G[1], Y[1])
-
-        if G[5] == 'g' and O[1] == 'o':
-            break
-        if G[5] == 'y' or O[1] == 'y':
-            break
-        if 'y' in Gtop:
-            YCW();OCW();YCW();OCCW();YCCW();GCCW();YCCW();GCW()
-        YCW()
-
-    while True:
-        Otop = (O[5], Y[3])
-
-        if O[7]== 'o' and B[5] == 'b':
-            break
-        if O[7]== 'y' or B[5] == 'y':
-            break
-        if 'y' in Otop:
-            YCW();BCW();YCW();BCCW();YCCW();OCCW();YCCW();OCW()
-        YCW()
-
-    while True:
-        Btop = (B[7], Y[7])
-
-        if B[3]== 'b' and R[7] == 'r':
-            break
-        if B[3]== 'y' or R[7] == 'y':
-            break
-        if 'y' in Btop:
-            YCW();RCW();YCW();RCCW();YCCW();BCCW();YCCW();BCW()
-        YCW()
-
-    while True:
-        Rtop = (R[3], Y[5])
-
-        if R[1]== 'r' and G[3] == 'g':
-            break
-        if R[1]== 'y' or G[3] == 'y':
-            break
-        if 'y' in Rtop:
-            YCW();GCW();YCW();GCCW();YCCW();RCCW();YCCW();RCW()
-        YCW()
-    #Cube()
-
-    while True:
-        if G[5] == 'g' and O[1] == 'o':
-            break
-        if G[1] =='g' and Y[1] == 'o':
-            YCW();OCW();YCW();OCCW();YCCW();GCCW();YCCW();GCW()
-            break
-        if O[5] =="o" and Y[3]=='g':
-            YCCW();GCCW();YCW();GCW();OCCW();GCW();OCW();GCCW()
-            break
-        YCW()
-
-    while True:
-        if O[7] == 'o' and B[5] == 'b':
-            break
-        if O[5] =="o" and Y[3]=='b':
-            YCW();BCW();YCW();BCCW();YCCW();OCCW();YCCW();OCW()
-            break
-        if B[7] =="b" and Y[7]=='o':
-            YCCW();OCCW();YCW();OCW();BCCW();OCW();BCW();OCCW()
-            break
-        YCW()
-    while True:
-        if B[3] == 'b' and R[7] == 'r':
-            break
-        if B[7] =="b" and Y[7]=='r':
-            YCW();RCW();YCW();RCCW();YCCW();BCCW();YCCW();BCW()
-            break
-        if R[3] =="r" and Y[5]=='b':
-            YCCW();BCCW();YCW();BCW();RCCW();BCW();RCW();BCCW()
-            break
-        YCW()
-    while True:
-        if R[1] == 'r' and G[3] == 'g':
-            break
-        if R[3] == "r" and Y[5]=='g':
-            YCW();GCW();YCW();GCCW();YCCW();RCCW();YCCW();RCW()
-            break
-        if G[1] =="g" and Y[1]=='r':
-            YCCW();RCCW();YCW();RCW();GCCW();RCW();GCW();RCCW()
-            break
-        YCW()
-    Cube()
-    pass
-def Yellow_Face(G,O,W,R,Y,B):
-    while True:
-        print('test')
-        if Y[1:8:2] == ['y', 'y', 'y', 'y']:
-            Cube()
-            break
-        rev=1
-        Y_cross = ''
-        Ycrosslist = {'0000':Oll}
-
-        for i in range(4):
-            if Y[rev]=='y': Y_cross+='y'
-            else: Y_cross+='0'
-            rev+=2
-        if Y_cross in Ycrosslist:
-            print(Ycrosslist[Y_cross])
-            Ycrosslist[Y_cross](0)
-            Cube()
-            break
-
-
-
-        sleep(2)
-
-
-sides='|'
-move_set = {"F": WCW, "F'": WCCW, "B": YCW, "B'": YCCW, "U": GCW, "U'": GCCW, "D": BCW, "D'": BCCW, "R": OCW, "R'": OCCW, "L": RCW, "L'": RCCW}
-#options = {"F": 1, "F'": 2, "B": 3, "B'": 4, "U": 5, "U'": 6, "D": 7, "D'": 8, "R": 9, "R'": 10, "L": 11, "L'": 12}
-#move_set = {1: WCW, 2: WCCW, 3: YCW, 4: YCCW, 5: GCW, 6: GCCW, 7: BCW, 8: BCCW, 9: OCW, 10: OCCW, 11: RCW, 12: RCCW}
-mixed=False
-#mixed=True
-
-#r b r' b r b b r'
-#r' u r' d d r u' r' d d r r
-#u u b l r' u u l' r b u u
+# Main solving loop
+cube_scrambled = False
 
 while True:
+    if not cube_scrambled:
+        scramble_cube(20)
+        cube_scrambled = True
+    visualize_cube()
 
-    if mixed is False:
-        scramble(20)
-        mixed = True
-        Cube()
-    #edges(G, O, W, R, Y, B)
-    daisy(G, O, W, R, Y, B)
-    White_Cross(G, O, W, R, Y, B)
-    White_Face(G, O, W, R, Y, B)
-    Second_Layer(G, O, W, R, Y, B)
-    Yellow_Face(G, O, W, R, Y, B)
-    input()
-
+    solve_daisy(GREEN, ORANGE, WHITE, RED, YELLOW, BLUE)
+    solve_white_cross(GREEN, ORANGE, WHITE, RED, YELLOW, BLUE)
+    solve_white_face(GREEN, ORANGE, WHITE, RED, YELLOW, BLUE)
+    solve_second_layer(GREEN, ORANGE, WHITE, RED, YELLOW, BLUE)
+    #solve_yellow_face(GREEN, ORANGE, WHITE, RED, YELLOW, BLUE)
+    visualize_cube()
+    input("Press Enter to continue...")
+    #controls()
